@@ -30,6 +30,11 @@ const stor = {
 const app = express();
 app.use(express.json());
 
+app.post('/api/user/login', (req, res) => {
+  res.status(201);
+  res.json({ id: 1, mail: 'test@mail.ru' });
+});
+
 app.get('/api/books', (req, res) => {
   const { books } = stor;
   res.json(books);
@@ -44,12 +49,11 @@ app.get('/api/books/:id', (req, res) => {
     res.json(books[idx]);
   } else {
     res.status(404);
-    res.json('404 | страница не найдена');
+    res.json({ errcode: 404, errmsg: '“not found”' });
   }
 });
 
 app.post('/api/books/', (req, res) => {
-  console.log(req.body);
   const { books } = stor;
   const { title, description, authors, favorite, fileCover, fileName } =
     req.body;
@@ -70,17 +74,13 @@ app.post('/api/books/', (req, res) => {
 app.put('/api/books/:id', (req, res) => {
   const { books } = stor;
   const changes = {};
-  //   const { title, description, authors, favorite, fileCover, fileName } =
-  //     req.body;
   for (const key in req.body) {
     if (req.body[key]) {
       changes[key] = req.body[key];
     }
-    console.log(key);
   }
   const { id } = req.params;
   const idx = books.findIndex((el) => el.id === id);
-  console.log(books[idx]);
   if (idx !== -1) {
     books[idx] = {
       ...books[idx],
@@ -90,14 +90,13 @@ app.put('/api/books/:id', (req, res) => {
     res.json(books[idx]);
   } else {
     res.status(404);
-    res.json('404 | страница не найдена');
+    res.json({ errcode: 404, errmsg: '“not found”' });
   }
 });
 
 app.delete('/api/books/:id', (req, res) => {
   const { books } = stor;
   const { id } = req.params;
-  console.log(id);
   const idx = books.findIndex((el) => el.id === id);
 
   if (idx !== -1) {
@@ -105,7 +104,7 @@ app.delete('/api/books/:id', (req, res) => {
     res.json(true);
   } else {
     res.status(404);
-    res.json('404 | страница не найдена');
+    res.json({ errcode: 404, errmsg: '“not found”' });
   }
 });
 
