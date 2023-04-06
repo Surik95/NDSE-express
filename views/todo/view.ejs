@@ -1,0 +1,52 @@
+<%- include('../port/layout-start', {title: todo.title}) %>
+<%- include('../port/menu') %>
+
+<h1><%= todo.title %></h1>
+
+<div>
+    <div>
+        <% if(todo.fileBook) { %>
+            <img src="http://localhost:3000/api/books/<%= todo.id%>/download" width="300px" height="500px">  
+            <% } else { %>  
+            <i>Not found</i>
+            <% } %>
+   <div>
+    <div style="font-weight:500" >
+        Описание
+    </div>
+    <div>
+        <%= todo.description %>
+    </div>
+   </div>
+   <div>
+    <div style="font-weight:500">
+        Автор
+    </div>
+    <div>
+        <%= todo.authors %>
+    </div>
+   </div>
+   <div>
+    <div style="font-weight:500">
+        File Cover
+    </div>
+    <div>
+        <%= todo.fileCover %>
+    </div>
+   </div>
+   <div>
+    <div style="font-weight:500">
+        File Name
+    </div>
+    <div>
+        <%= todo.fileName %>
+    </div>
+   </div>
+   <div style="font-weight:500">
+    <% if(todo.favorite) { %>
+        <i>В избранном</i>  
+        <% }  %>    
+   </div>
+</div>
+
+<%- include('../port/layout-end') %>

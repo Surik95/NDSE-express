@@ -1,0 +1,66 @@
+<form method="POST" class="mt-5" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="inputTitle">Название книги</label>
+        <input type="text"
+               value="<%= todo.title %>"
+               name="title"
+               class="form-control"
+               id="inputTitle">
+    </div>
+
+    <div class="form-group">
+        <label for="inputAuthors">Автор</label>
+        <input type="text"
+               value="<%= todo.authors %>"
+               name="authors"
+               class="form-control"
+               id="inputAuthors">
+    </div>
+
+    <div class="form-group">
+        <label for="inputFileCover">FileCover</label>
+        <input type="text"
+               value="<%= todo.fileCover %>"
+               name="fileCover"
+               class="form-control"
+               id="inputFileCover">
+    </div>
+    
+    <div class="form-group">
+        <label for="inputFileName">FileName</label>
+        <input type="text"
+               value="<%= todo.fileName %>"
+               name="fileName"
+               class="form-control"
+               id="inputFileName">
+    </div>
+
+    <div class="form-group">
+        <label for="inputFilebook">Обложка книги</label>
+        <input type="file"
+               name="fileBook"
+               id="inputFilebook">
+    </div>
+
+    <div class="form-group">
+        <label for="inputDesc">Описание</label>
+        <textarea
+                rows="3"
+                name="description"
+                class="form-control"
+                id="inputDesc"
+        ><%= todo.description %></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="inputFavorite">Добавить в избранное</label>
+        <input type="checkbox"
+               value="<%= todo.favorite %>"
+               name="favorite"
+               id="inputFavorite">
+    </div>
+
+    <div class="form-group text-right ">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+</form>

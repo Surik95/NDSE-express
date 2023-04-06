@@ -5,10 +5,8 @@ const storage = multer.diskStorage({
     cb(null, 'public/img');
   },
   filename(req, file, cb) {
-    cb(null, `1.png`);
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
 export default multer({ storage });
-
-// ${Date.now()}-${file.originalname}

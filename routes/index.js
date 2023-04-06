@@ -10,12 +10,7 @@ const __dirname = dirname(__filename);
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  const { books } = stor;
-  res.json(books);
-});
-
-router.post('/', fileMulter.single('fileBook'), (req, res) => {
+router.post('/create', fileMulter.single('fileBook'), (req, res) => {
   const { books } = stor;
   const { title, description, authors, favorite, fileCover, fileName } =
     req.body;
@@ -29,18 +24,18 @@ router.post('/', fileMulter.single('fileBook'), (req, res) => {
   );
 
   if (req.file) {
-    newBook.fileBook = req.file.path;
+    newBook.fileBook = req.file.destination + '/' + req.file.filename;
   }
 
   books.push(newBook);
 
+  res.redirect('http://localhost:3000/api/books/');
+
   res.status(201);
-  res.json(newBook);
 });
 
 router.get('/:id', (req, res) => {
   const { books } = stor;
-  console.log(req.params);
   const { id } = req.params;
   const idx = books.findIndex((el) => el.id === id);
 
@@ -52,7 +47,7 @@ router.get('/:id', (req, res) => {
   }
 });
 
-router.put('/:id', fileMulter.single('fileBook'), (req, res) => {
+router.post('/:id/update', fileMulter.single('fileBook'), (req, res) => {
   const { books } = stor;
   const changes = {};
   for (const key in req.body) {
@@ -70,8 +65,8 @@ router.put('/:id', fileMulter.single('fileBook'), (req, res) => {
     if (req.file) {
       books[idx].fileBook = req.file.path;
     }
-
-    res.json(books[idx]);
+    res.redirect('http://localhost:3000/api/books/');
+    res.status(201);
   } else {
     res.status(404);
     res.json({ errcode: 404, errmsg: '“not found”' });
@@ -95,10 +90,8 @@ router.delete('/:id', (req, res) => {
 router.get('/:id/download', (req, res) => {
   const { books } = stor;
   const { id } = req.params;
-  console.log(req.params);
   const idx = books.findIndex((el) => el.id === id);
   if (idx !== -1) {
-    console.log(books[idx].fileBook);
     res.download(
       __dirname + `/../${books[idx].fileBook}`,
       books[idx].fileBook.slice(11),
