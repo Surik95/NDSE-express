@@ -6,7 +6,7 @@
 <div>
     <div>
         <% if(todo.fileBook) { %>
-            <img src="http://localhost:3000/api/books/<%= todo.id%>/download" width="300px" height="500px">  
+            <img src="<%=process.env.URL_HOME%>api/books/<%= todo.id%>/download" width="300px" height="500px">  
             <% } else { %>  
             <i>Not found</i>
             <% } %>

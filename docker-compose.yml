@@ -1,0 +1,28 @@
+services:
+  storage: # сервис с именем storage
+    image: redis # использует образ redis:latest
+    volumes:
+      - ./data:/data # подключает диск
+  counter: # сервис с именем counter
+    image: surik95/counter
+    environment:
+      - REDIS_URL=redis://storage
+      - PORT=3001
+    depends_on:
+      - storage
+    command: ['npm', 'run', 'start']
+  liblary:
+    image: node
+    working_dir: /app
+    build: ./4-express # собирает образ из папки ./counter
+    volumes:
+      - ./:/app # подключает диск с кодом
+    ports:
+      - 80:3000 # мапит порт 80 хоста на порт контейнера
+    environment:
+      - URL_HOME=http://localhost:0080/
+      - URL_COUNTER=counter:/3001/
+      - PORT=3000
+    depends_on:
+      - counter
+    command: ['npm', 'run', 'start']

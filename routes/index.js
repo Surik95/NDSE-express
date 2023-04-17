@@ -29,7 +29,7 @@ router.post('/create', fileMulter.single('fileBook'), (req, res) => {
 
   books.push(newBook);
 
-  res.redirect('http://localhost:3000/api/books/');
+  res.redirect(`${process.env.URL_HOME}api/books/`);
 
   res.status(201);
 });
@@ -65,7 +65,7 @@ router.post('/:id/update', fileMulter.single('fileBook'), (req, res) => {
     if (req.file) {
       books[idx].fileBook = req.file.path;
     }
-    res.redirect('http://localhost:3000/api/books/');
+    res.redirect(`${process.env.URL_HOME}api/books/`);
     res.status(201);
   } else {
     res.status(404);

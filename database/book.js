@@ -8,6 +8,7 @@ class Book {
     favorite = false,
     fileCover = '',
     fileName = '',
+    views = 0,
     id = nanoid()
   ) {
     this.id = id;
@@ -17,6 +18,7 @@ class Book {
     this.favorite = typeof favorite === 'string' ? true : favorite;
     this.fileCover = fileCover;
     this.fileName = fileName;
+    this.views = 0;
   }
 }
 

@@ -3,7 +3,7 @@
 
 
 <h1><%= title %></h1>
-<a class="btn btn-sm btn-primary" href="http://localhost:3000/api/books/create">Добавить запись</a>
+<a class="btn btn-sm btn-primary" href="<%=process.env.URL_HOME%>api/books/create">Добавить запись</a>
     <% if(todos.length) { %>
         <table class="table table-striped table-sm  mt-3">
             <thead>
@@ -15,6 +15,7 @@
                 <th scope="col">Автор</th>
                 <th scope="col">В избранном</th>
                 <th scope="col">Заголовок</th>
+                <th scope="col">Просмотры</th>
                 <th scope="col">Действие</th>
             </tr>
             </thead>
@@ -24,7 +25,7 @@
                         <th scope="row"><%= idx +1 %></th>
                         <td>
                         <% if(el.fileBook) { %>
-                            <img src="http://localhost:3000/api/books/<%= el.id%>/download" width="30px" height="50px">  
+                            <img src="<%=process.env.URL_HOME%>api/books/<%= el.id%>/download" width="30px" height="50px">  
                             <% } else { %>  
                             <i>Not found</i>
                             <% } %>
@@ -40,11 +41,12 @@
                         <% } %>     
                         </td>
                         <td><%= el.fileName %></td>
+                        <td><%= el.views %></td>
                         <td class="text-right">
-                            <a class="btn btn-sm btn-success" href="http://localhost:3000/api/books/<%= el.id %>">
+                            <a class="btn btn-sm btn-success" href="<%=process.env.URL_HOME%>api/books/<%= el.id %>">
                                 <i class="fa fa-eye" aria-hidden="true"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary" href="http://localhost:3000/api/books/<%= el.id %>/update/">
+                            <a class="btn btn-sm btn-primary" href="<%=process.env.URL_HOME%>api/books/<%= el.id %>/update/">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </a>
                         </td>
