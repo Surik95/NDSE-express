@@ -18,7 +18,7 @@ class Book {
     this.favorite = typeof favorite === 'string' ? true : favorite;
     this.fileCover = fileCover;
     this.fileName = fileName;
-    this.views = 0;
+    this.views = '0';
   }
 }
 

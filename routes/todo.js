@@ -1,29 +1,53 @@
-import express, { json } from 'express';
+import express from 'express';
 import stor from '../database/stor.js';
 
 const router = express.Router();
+console.log(process.env.URL_COUNTER);
 
-router.get('/', (req, res) => {
+const prom = new Promise((resolve, reject) => {
   const { books } = stor;
+  books.forEach(async (item) => {
+    console.log(item.id);
+    try {
+      const response = await fetch(
+        `${process.env.URL_COUNTER}counter/${item.id}`
+      ).then((data) => data.json());
+      console.log(response);
+      item.views = response.cnt;
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  resolve(books);
+});
 
+router.get('/', async (req, res) => {
+  const { books } = stor;
+  console.log(books.length);
   if (books.length > 0) {
     books.forEach(async (item) => {
       try {
         const response = await fetch(
           `${process.env.URL_COUNTER}counter/${item.id}`
         ).then((data) => data.json());
-        console.log(response);
-        item.views = response.cnt;
+        if (response.cnt) {
+          item.views = response.cnt;
+        }
       } catch (e) {
         console.log(e);
+      } finally {
+        res.render('todo/index', {
+          title: 'Главная',
+          todos: books,
+        });
       }
     });
+  } else {
+    res.render('todo/index', {
+      title: 'Главная',
+      todos: books,
+    });
   }
-
-  res.render('todo/index', {
-    title: 'Главная',
-    todos: books,
-  });
 });
 
 router.get('/create', (req, res) => {
