@@ -1,52 +1,53 @@
 import express from 'express';
 import stor from '../database/stor.js';
+import Liblary from '../models/liblary.js';
 
 const router = express.Router();
-console.log(process.env.URL_COUNTER);
 
-const prom = new Promise((resolve, reject) => {
-  const { books } = stor;
-  books.forEach(async (item) => {
-    console.log(item.id);
-    try {
-      const response = await fetch(
-        `${process.env.URL_COUNTER}counter/${item.id}`
-      ).then((data) => data.json());
-      console.log(response);
-      item.views = response.cnt;
-    } catch (e) {
-      console.log(e);
-    }
-  });
-  resolve(books);
-});
+// const prom = new Promise((resolve, reject) => {
+//   const { books } = stor;
+//   books.forEach(async (item) => {
+//     try {
+//       const response = await fetch(
+//         `${process.env.URL_COUNTER}counter/${item.id}`
+//       ).then((data) => data.json());
+//       item.views = response.cnt;
+//     } catch (e) {
+//       console.log(e);
+//     }
+//   });
+//   resolve(books);
+// });
 
 router.get('/', async (req, res) => {
-  const { books } = stor;
-  console.log(books.length);
-  if (books.length > 0) {
-    books.forEach(async (item) => {
-      try {
-        const response = await fetch(
-          `${process.env.URL_COUNTER}counter/${item.id}`
-        ).then((data) => data.json());
-        if (response.cnt) {
-          item.views = response.cnt;
+  try {
+    const books = await Liblary.find().select('-__v');
+    if (books.length > 0) {
+      books.forEach(async (item) => {
+        try {
+          const response = await fetch(
+            `${process.env.URL_COUNTER}counter/${item.id}`
+          ).then((data) => data.json());
+          if (response.cnt) {
+            item.views = response.cnt;
+          }
+        } catch (e) {
+          console.log(e);
+        } finally {
+          res.render('todo/index', {
+            title: 'Главная',
+            todos: books,
+          });
         }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        res.render('todo/index', {
-          title: 'Главная',
-          todos: books,
-        });
-      }
-    });
-  } else {
-    res.render('todo/index', {
-      title: 'Главная',
-      todos: books,
-    });
+      });
+    } else {
+      res.render('todo/index', {
+        title: 'Главная',
+        todos: books,
+      });
+    }
+  } catch (e) {
+    res.status(404).json(e);
   }
 });
 
@@ -58,22 +59,32 @@ router.get('/create', (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  const { books } = stor;
   const { id } = req.params;
-  const idx = books.findIndex((el) => el.id === id);
+  let book;
 
-  if (idx === -1) {
+  try {
+    book = await Liblary.findById(id).select('-__v');
+  } catch (e) {
+    res.status(404).json(e);
+  }
+
+  if (!book) {
     res.redirect('/404');
   }
 
-  if (id) {
+  if (book) {
     try {
       await fetch(`${process.env.URL_COUNTER}counter/${id}/incr`, {
         method: 'POST',
+        headers: {
+          'Content-type': 'aplication/json',
+        },
       }).then(
         res.render('todo/view', {
-          todo: books[idx],
+          todo: book,
         })
+        // .status(201)
+        // .json({ book })
       );
     } catch (e) {
       console.log(e);
@@ -81,19 +92,23 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/:id/update', (req, res) => {
-  const { books } = stor;
+router.get('/:id/update', async (req, res) => {
   const { id } = req.params;
-  const idx = books.findIndex((el) => el.id === id);
+  let book;
 
-  if (idx === -1) {
-    res.redirect('/404');
+  try {
+    book = await Liblary.findById(id).select('-__v');
+    res.render('todo/update', {
+      title: 'Редактирование книги',
+      todo: book,
+    });
+  } catch (e) {
+    res.status(404).json(e);
   }
 
-  res.render('todo/update', {
-    title: 'Редактирование книги',
-    todo: books[idx],
-  });
+  if (!book) {
+    res.redirect('/404');
+  }
 });
 
 export default router;
