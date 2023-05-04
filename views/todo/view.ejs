@@ -41,12 +41,19 @@
     <div>
         <%= todo.fileName %>
     </div>
+    <div style="font-weight:500">
+        Просмотры
+    </div>
+    <div>
+        <%= todo.views %>
+    </div>
    </div>
    <div style="font-weight:500">
     <% if(todo.favorite) { %>
         <i>В избранном</i>  
         <% }  %>    
    </div>
+   
 </div>
 
 <%- include('../port/layout-end') %>

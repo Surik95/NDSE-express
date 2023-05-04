@@ -4,43 +4,10 @@ import Liblary from '../models/liblary.js';
 
 const router = express.Router();
 
-// const prom = new Promise((resolve, reject) => {
-//   const { books } = stor;
-//   books.forEach(async (item) => {
-//     try {
-//       const response = await fetch(
-//         `${process.env.URL_COUNTER}counter/${item.id}`
-//       ).then((data) => data.json());
-//       item.views = response.cnt;
-//     } catch (e) {
-//       console.log(e);
-//     }
-//   });
-//   resolve(books);
-// });
-
 router.get('/', async (req, res) => {
   try {
     const books = await Liblary.find().select('-__v');
     if (books.length > 0) {
-      books.forEach(async (item) => {
-        try {
-          const response = await fetch(
-            `${process.env.URL_COUNTER}counter/${item.id}`
-          ).then((data) => data.json());
-          if (response.cnt) {
-            item.views = response.cnt;
-          }
-        } catch (e) {
-          console.log(e);
-        } finally {
-          res.render('todo/index', {
-            title: 'Главная',
-            todos: books,
-          });
-        }
-      });
-    } else {
       res.render('todo/index', {
         title: 'Главная',
         todos: books,
@@ -64,6 +31,7 @@ router.get('/:id', async (req, res) => {
 
   try {
     book = await Liblary.findById(id).select('-__v');
+    console.log(book);
   } catch (e) {
     res.status(404).json(e);
   }
@@ -79,13 +47,16 @@ router.get('/:id', async (req, res) => {
         headers: {
           'Content-type': 'aplication/json',
         },
-      }).then(
-        res.render('todo/view', {
-          todo: book,
-        })
-        // .status(201)
-        // .json({ book })
-      );
+      });
+      await fetch(`${process.env.URL_COUNTER}counter/${id}`)
+        .then((data) => data.json())
+        .then((data) => {
+          console.log(data.cnt);
+          book.views = data.cnt;
+          res.render('todo/view', {
+            todo: book,
+          });
+        });
     } catch (e) {
       console.log(e);
     }

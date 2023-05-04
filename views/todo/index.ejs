@@ -15,7 +15,6 @@
                 <th scope="col">Автор</th>
                 <th scope="col">В избранном</th>
                 <th scope="col">Заголовок</th>
-                <th scope="col">Просмотры</th>
                 <th scope="col">Действие</th>
             </tr>
             </thead>
@@ -41,7 +40,6 @@
                         <% } %>     
                         </td>
                         <td><%= el.fileName %></td>
-                        <td><%= el.views %></td>
                         <td class="text-right">
                             <a class="btn btn-sm btn-success" href="<%=process.env.URL_HOME%>api/books/<%= el.id %>">
                                 <i class="fa fa-eye" aria-hidden="true"></i>
