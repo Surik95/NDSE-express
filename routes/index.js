@@ -1,6 +1,5 @@
 import express from 'express';
 import Book from '../database/book.js';
-import stor from '../database/stor.js';
 import fileMulter from '../middlewere/file.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
